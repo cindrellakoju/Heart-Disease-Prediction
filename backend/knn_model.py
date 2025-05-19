@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, classification_report
+import joblib
 
 data_frame = pd.read_csv('heart.csv')
 
@@ -34,32 +35,34 @@ y_pred = knn.predict(X_test_scale)
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print("\nClassification Report:\n", classification_report(y_test, y_pred))
 
-def predict_heart_disease(model, scaler, input_data):
-    """
-    model: trained KNN model
-    scaler: the StandardScaler used to scale training data
-    input_data: list or array of input feature values in correct order
+# def predict_heart_disease(model, scaler, input_data):
+#     """
+#     model: trained KNN model
+#     scaler: the StandardScaler used to scale training data
+#     input_data: list or array of input feature values in correct order
     
-    Returns prediction 0 or 1
-    """
-    # Convert input to 2D array for scaler/model (1 sample, n features)
-    input_array = [input_data]
+#     Returns prediction 0 or 1
+#     """
+#     # Convert input to 2D array for scaler/model (1 sample, n features)
+#     input_array = [input_data]
     
-    # Scale the input the same way training data was scaled
-    input_scaled = scaler.transform(input_array)
-    print("Scaled:",input_scaled)
-    # Predict
-    prediction = model.predict(input_scaled)
-    print("Prediction:",prediction)
-    return prediction[0]
+#     # Scale the input the same way training data was scaled
+#     input_scaled = scaler.transform(input_array)
+#     # Predict
+#     prediction = model.predict(input_scaled)
+#     print("Prediction:",prediction)
+#     return prediction[0]
 
-# ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal'](IN This order)
+# # ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal'](IN This order)
 
-new_patient = [55, 1, 0, 130, 250, 0, 1, 150, 0, 1.5, 2, 0, 2]
+# new_patient = [55, 1, 0, 130, 250, 0, 1, 150, 0, 1.5, 2, 0, 2]
 
-result = predict_heart_disease(knn, scaler, new_patient)
+# result = predict_heart_disease(knn, scaler, new_patient)
 
-if result == 1:
-    print("Prediction: You may have heart disease.")
-else:
-    print("Prediction: You are unlikely to have heart disease.")
+# if result == 1:
+#     print("Prediction: You may have heart disease.")
+# else:
+#     print("Prediction: You are unlikely to have heart disease.")
+
+joblib.dump(knn, 'model.pkl')
+joblib.dump(scaler, 'scaler.pkl')

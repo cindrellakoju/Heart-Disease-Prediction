@@ -1,6 +1,5 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from .forms import HeartDiseaseForm
 
 def home(request):
     context = {
@@ -8,6 +7,8 @@ def home(request):
     }
     return render(request,'homepage.html',context)
     # return HttpResponse("Hello from prediction App")
+
+from .forms import HeartDiseaseForm
 
 def heart_disease_form(request):
     form = HeartDiseaseForm()

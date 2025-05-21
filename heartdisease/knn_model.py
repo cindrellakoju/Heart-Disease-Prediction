@@ -35,6 +35,7 @@ y_pred = knn.predict(X_test_scale)
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print("\nClassification Report:\n", classification_report(y_test, y_pred))
 
+# To check
 # def predict_heart_disease(model, scaler, input_data):
 #     """
 #     model: trained KNN model

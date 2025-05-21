@@ -8,7 +8,7 @@ app = Flask(__name__)
 model = joblib.load('model.pkl')
 scaler = joblib.load('scaler.pkl')
 
-feature_names = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 
+feature_names = ['age', 'sex', 'chestpain', 'trestbps', 'chol', 'fbs', 'restecg', 
                  'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
 
 @app.route('/', methods=['GET', 'POST'])
@@ -20,7 +20,7 @@ def index():
             for feature in feature_names:
                 val = float(request.form.get(feature))
                 input_data.append(val)
-
+                
             # Convert to 2D array, scale, predict
             input_array = np.array(input_data).reshape(1, -1)
             input_scaled = scaler.transform(input_array)

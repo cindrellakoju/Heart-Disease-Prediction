@@ -252,9 +252,9 @@
 
                 <label>Thalassemia (thal):</label>
                 <select name="thal">
-                    <option value="3">Normal</option>
-                    <option value="6">Fixed Defect</option>
-                    <option value="7">Reversible Defect</option>
+                    <option value="1">Normal</option>
+                    <option value="2">Fixed Defect</option>
+                    <option value="3">Reversible Defect</option>
                 </select>
 
                 <button type="submit">Predict</button>
@@ -263,48 +263,56 @@
 
         <div class="info-container">
             <h3>Feature Info</h3>
-            <p><strong>Age:</strong> Age in years (e.g., 29–77 typical)</p>
+            <p><strong>Age:</strong> Age in years (e.g., 29-77 typical)</p>
             <p><strong>Sex:</strong><br>1 = Male<br>0 = Female</p>
             <p><strong>Chest Pain Type (cp):</strong><br>0 = Typical Angina<br>1 = Atypical Angina<br>2 = Non-anginal Pain<br>3 = Asymptomatic</p>
-            <p><strong>Resting Blood Pressure:</strong> Measured in mm Hg (94–200 typical)</p>
-            <p><strong>Cholesterol:</strong> Serum cholesterol in mg/dl (126–564 typical)</p>
+            <p><strong>Resting Blood Pressure:</strong> Measured in mm Hg (94-200 typical)</p>
+            <p><strong>Cholesterol:</strong> Serum cholesterol in mg/dl (126-564 typical)</p>
             <p><strong>Fasting Blood Sugar:</strong><br>1 = True (fbs > 120 mg/dl)<br>0 = False</p>
             <p><strong>Resting ECG (restecg):</strong><br>0 = Normal<br>1 = ST-T Abnormality<br>2 = Left Ventricular Hypertrophy</p>
-            <p><strong>Max Heart Rate (thalach):</strong> 71–202 bpm typical</p>
+            <p><strong>Max Heart Rate (thalach):</strong> 71-202 bpm typical</p>
             <p><strong>Exercise-Induced Angina (exang):</strong><br>1 = Yes<br>0 = No</p>
-            <p><strong>Oldpeak:</strong> ST depression (0.0–6.2 typical)</p>
+            <p><strong>Oldpeak:</strong> ST depression (0.0-6.2 typical)</p>
             <p><strong>Slope:</strong><br>0 = Downsloping<br>1 = Flat<br>2 = Upsloping</p>
-            <p><strong>CA (Fluoroscopy Vessels):</strong><br>0–3 vessels (higher = worse)</p>
-            <p><strong>Thal (Thallium Test):</strong><br>3 = Normal<br>6 = Fixed Defect<br>7 = Reversible Defect</p>
+            <p><strong>CA (Fluoroscopy Vessels):</strong><br>0-3 vessels (higher = worse)</p>
+            <p><strong>Thal (Thallium Test):</strong><br>1 = Normal<br>2 = Fixed Defect<br>3 = Reversible Defect</p>
         </div>
     </div>
 
-    <!-- Modal for Result -->
-    <div class="modal" id="resultModal">
-        <div class="modal-content">
-            <h2>Prediction Result</h2>
-            <p id="resultText">Your result will appear here.</p>
-            <button onclick="closeModal()">Close</button>
-        </div>
+    <!-- {% if result %}
+    <p>{{ result }}</p>
+    {% endif %} -->
+    <!-- Modal -->
+<div id="resultModal" class="modal">
+    <div class="modal-content">
+        <h2>Prediction Result</h2>
+        <p id="modalMessage">{{ result }}</p>
+        <button id="closeModalBtn">Close</button>
     </div>
+</div>
 
-    <script>
-        function openModal(result) {
-            document.getElementById('resultText').innerText = result;
-            document.getElementById('resultModal').style.display = 'flex';
-        }
+<script>
+    // Show modal if result exists
+    document.addEventListener('DOMContentLoaded', function () {
+        const result = "{{ result|safe }}";
+        if (result.trim() !== "") {
+            const modal = document.getElementById('resultModal');
+            modal.style.display = 'flex';
 
-        function closeModal() {
-            document.getElementById('resultModal').style.display = 'none';
-        }
+            // Close button event
+            document.getElementById('closeModalBtn').onclick = function () {
+                modal.style.display = 'none';
+            }
 
-        // Handle form submission
-        document.getElementById('heartForm').onsubmit = function(e) {
-            e.preventDefault();
-            // Example result (replace with actual prediction logic)
-            const result = "Heart disease detected";  // Replace this with actual logic
-            openModal(result);
+            // Close modal when clicking outside content
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            }
         }
-    </script>
+    });
+</script>
+
 </body>
 </html>

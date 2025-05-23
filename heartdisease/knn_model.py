@@ -27,7 +27,7 @@ X_test_scale = scaler.transform(X_test)
 
 # KNN model
 # n_neighbour = 31: To classify new point , the neighbour will  look at the 31 nearest data
-knn = KNeighborsClassifier(n_neighbors=31)
+knn = KNeighborsClassifier(n_neighbors=5)
 knn.fit(X_train_scale, y_train)
 
 y_pred = knn.predict(X_test_scale)
@@ -56,7 +56,7 @@ print("\nClassification Report:\n", classification_report(y_test, y_pred))
 
 # # ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal'](IN This order)
 
-# new_patient = [55, 1, 0, 130, 250, 0, 1, 150, 0, 1.5, 2, 0, 2]
+# new_patient = [50,0,1,120,244,0,1,162,0,1.1,2,0,2]
 
 # result = predict_heart_disease(knn, scaler, new_patient)
 

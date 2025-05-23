@@ -15,6 +15,7 @@ feature_names = ['age', 'sex', 'chestpain', 'trestbps', 'chol', 'fbs', 'restecg'
 def index():
     if request.method == 'POST':
         try:
+            print("Post cicked")
             # Extract features from form inputs
             input_data = []
             for feature in feature_names:
@@ -26,7 +27,10 @@ def index():
             input_scaled = scaler.transform(input_array)
             prediction = model.predict(input_scaled)[0]
 
+            print(f"Input data:{input_data}")
+            print("Predction:",prediction)
             result = "You may have heart disease." if prediction == 1 else "You are unlikely to have heart disease."
+            print(result)
             return render_template('index.html', result=result, inputs=request.form)
         except Exception as e:
             return render_template('index.html', result=f"Error: {e}", inputs=request.form)
@@ -35,3 +39,5 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+# 1 - No disease  0 - Disease

@@ -4,66 +4,52 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, classification_report
 import joblib
+import matplotlib.pyplot as plt
 
+# 1. Load data
 data_frame = pd.read_csv('heart.csv')
 
-# Displaying dataframe info
-# print(data_frame.head())
-# print(data_frame.info())
-# print(data_frame.describe())
+# 2. Prepare input and target
+X_input = data_frame.drop("target", axis=1)
+Y_output = data_frame["target"]
 
-X_input = data_frame.drop("target",axis = 1) #input without target
-Y_output = data_frame["target"] #only target value
+# 3. Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X_input, Y_output, test_size=0.2, random_state=42)
 
-# Train set 80% and test set 20%
-X_train, X_test, y_train, y_test  = train_test_split(X_input,Y_output, test_size = 0.2, random_state = 42)
-
-# Scaling mean in the form of 0 and standard deviation in the form of 1
-# fit_transform(): Learns the scaling parameters (mean & std) from the data and applies the scaling.
-# transform(): Uses previously learned scaling parameters to scale new data without learning again.
+# 4. Feature scaling
 scaler = StandardScaler()
 X_train_scale = scaler.fit_transform(X_train)
 X_test_scale = scaler.transform(X_test)
 
-# KNN model
-# n_neighbour = 31: To classify new point , the neighbour will  look at the 31 nearest data
+# 5. Train KNN model
 knn = KNeighborsClassifier(n_neighbors=5)
 knn.fit(X_train_scale, y_train)
 
+# 6. Predict and evaluate
 y_pred = knn.predict(X_test_scale)
-
-print("Accuracy:", accuracy_score(y_test, y_pred))
+acc = accuracy_score(y_test, y_pred)
+report_dict = classification_report(y_test, y_pred, output_dict=True)
+print("Accuracy:", acc)
 print("\nClassification Report:\n", classification_report(y_test, y_pred))
 
-# To check
-# def predict_heart_disease(model, scaler, input_data):
-#     """
-#     model: trained KNN model
-#     scaler: the StandardScaler used to scale training data
-#     input_data: list or array of input feature values in correct order
-    
-#     Returns prediction 0 or 1
-#     """
-#     # Convert input to 2D array for scaler/model (1 sample, n features)
-#     input_array = [input_data]
-    
-#     # Scale the input the same way training data was scaled
-#     input_scaled = scaler.transform(input_array)
-#     # Predict
-#     prediction = model.predict(input_scaled)
-#     print("Prediction:",prediction)
-#     return prediction[0]
+# 7. Plot classification report
+classes = ['0', '1']
+metrics = ['precision', 'recall', 'f1-score']
 
-# # ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal'](IN This order)
+fig, ax = plt.subplots(figsize=(8, 4))
+for i, metric in enumerate(metrics):
+    values = [report_dict[c][metric] for c in classes]
+    ax.bar([x + i*0.25 for x in range(len(classes))], values, width=0.25, label=metric)
 
-# new_patient = [50,0,1,120,244,0,1,162,0,1.1,2,0,2]
+ax.set_xticks([r + 0.25 for r in range(len(classes))])
+ax.set_xticklabels(['Class 0 (No HD)', 'Class 1 (Has HD)'])
+ax.set_ylim(0, 1.1)
+ax.set_title(f"Classification Report (Accuracy = {acc:.2f})")
+ax.set_ylabel("Score")
+ax.legend()
+plt.tight_layout()
+plt.show()
 
-# result = predict_heart_disease(knn, scaler, new_patient)
-
-# if result == 1:
-#     print("Prediction: You may have heart disease.")
-# else:
-#     print("Prediction: You are unlikely to have heart disease.")
-
+# 8. Save model and scaler
 joblib.dump(knn, 'model.pkl')
 joblib.dump(scaler, 'scaler.pkl')

@@ -40,4 +40,4 @@ def index():
 if __name__ == '__main__':
     app.run(debug=True)
 
-# 1 - No disease  0 - Disease
+# 1 - disease  0 - No Disease
